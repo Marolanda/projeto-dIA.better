@@ -34,15 +34,15 @@
             </div>
             <div id="imc">
                 <img src="{{ url_for('static', filename='image.svg') }}" alt="" id="image">
-                <a href="{{ url_for('imc_pagina') }}"><button id="botao_azul">Não sabe seu IMC? Descubra agora!</button></a>
+                <a href="{{ url_for('pag_imc') }}"><button id="botao_azul">Não sabe seu IMC? Descubra agora!</button></a>
                 <p>IMC é a sigla para Índice de Massa Corpórea, parâmetro...</p>
             </div>
             <div id="inputs">
                 <h1>Preencha os espaços abaixo e descubra </h1>
-                <form action="/predict" method="POST" onsubmit="return formatarNumeros()">
+                <form action="/predict" method="POST" id="predictForm">
                     <div id="grid_input">
                         <input id="input_idade" type="number" name="age" placeholder="Sua idade">
-                        <input id="input_imc" type="text" name="bmi" placeholder="Seu IMC" required pattern="^\d+([.,]\d+)$" title="Digite um número válido, como 25,4 ou 25.4">
+                        <input id="input_imc" type="text" name="bmi" value="{{ imc_value | default('') }}" placeholder="Seu IMC" required pattern="^\d+([.,]\d+)$" title="Digite um número válido, como 25,4 ou 25.4">
                         <input id="input_glicose" type="number" name="blood_glucose_level" placeholder="Seu nível de glicose">
                         <input id="input_hba1c" type="text" name="HbA1c_level" placeholder="Seu hbA1c" required pattern="^\d+([.,]\d+)$" title="Digite um número válido, como 5,4 ou 5.4">
                         <select name="gender" required>
@@ -68,11 +68,15 @@
                             <option value="1">Sim</option>
                             <option value="0">Não</option>
                         </select>
+                        <input type="hidden" name="scroll_position" id="predict_scroll_position">
                         <button id="botao_azul" type="submit" >Calcular</button>
                         <button id="botao_vermelho" type="reset" >Limpar</button>
-                        <p id="resultado">Resultado: <strong id="resultado-prediction"></strong></p>
+                        <div id="resultado">
+                            <p id="resultadoL">Resultado: {% if request.args.get('prediction') %} <p id="resultadoR">{{ request.args.get('prediction') }}</p> {% endif %}</p>
+                        </div>
                     </div>
                 </form>
+                
             </div>
         </section>
         <section id="body2">
@@ -97,10 +101,14 @@
         <div id="grid" style="justify-content: flex-start;">
             <img src="{{ url_for('static', filename='grafico 3.svg') }}" alt="grafico">
             <img src="{{ url_for('static', filename='grafico 4.svg') }}" alt="grafico">
-            <button id="botaoGraficos" style="width: 50%; color: white;">Mostrar mais gráficos</button>
+            <form action="/toggle_graphs" method="post" id="toggleGraphsForm">
+                <input type="hidden" name="scroll_position" id="scroll_position">
+                <button id="botaoGraficos" style="width: 100%; color: white;">Mostrar mais gráficos</button>
+            </form>
+            
             <div></div>
         </div>
-        <div id="graficos">
+        <div id="graficos" style="display: {{ 'grid' if show_graphs else 'none' }};">
             <div id="divGrafico">
                 <img src="{{ url_for('static', filename='grafico 2.svg') }}" alt="grafico">
             </div>
@@ -130,43 +138,21 @@
         </p>
     </footer>
     <script>
-        const resultadoPrediction = "{{ prediction }}";
-        if (resultadoPrediction) {
-            document.getElementById("resultado-prediction").textContent = resultadoPrediction;
-        }
-        /*salvando o imc calculado da página imc na página inicial*/
-        const imcValue = sessionStorage.getItem("imcValue");
-        if (imcValue) {
-            let imcValueFormatado = imcValue.replace(",", ".");
-            document.getElementById("input_imc").value = imcValueFormatado;
-            sessionStorage.removeItem("imcValue"); 
-        }
-        /*formatando e verificando os valores de imc e hba1c*/
-        function formatarNumeros() {
-            const imcInput = document.getElementById("input_imc");
-            const hba1cInput = document.getElementById("input_hba1c");
-
-            imcInput.value = imcInput.value.replace(",", ".");
-            hba1cInput.value = hba1cInput.value.replace(",", ".");
-
-            if (isNaN(parseFloat(imcInput.value)) || isNaN(parseFloat(hba1cInput.value))) {
-                alert("Por favor, insira valores válidos para IMC e/ou HbA1c.");
-                return false;
-            }
-
-            return true;
-        }
-
-        const botao = document.getElementById('botaoGraficos');
-        const div = document.getElementById('graficos');
-
-        botao.addEventListener('click', () => {
-            if (div.style.display === 'none' || div.style.display === '') {
-                div.style.display = 'grid';
-            } else {
-                div.style.display = 'none';
-            }
+        // Adiciona um evento de submit ao formulário de gráficos
+        document.getElementById('toggleGraphsForm').addEventListener('submit', function () {
+            document.getElementById('scroll_position').value = window.scrollY; // Define a posição do scroll no campo hidden
         });
+    
+        // Adiciona um evento de submit ao formulário de predição
+        document.getElementById('predictForm').addEventListener('submit', function () {
+            document.getElementById('predict_scroll_position').value = window.scrollY; // Define a posição do scroll no campo hidden
+        });
+    
+        // Restaura a posição do scroll após o recarregamento da página
+        window.onload = function () {
+            const scrollPosition = parseInt(new URLSearchParams(window.location.search).get('scroll_position')) || 0;
+            window.scrollTo(0, scrollPosition);
+        };
     </script>
 </body>
 </html>

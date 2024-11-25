@@ -44,20 +44,31 @@
                 </div>
             </div>
             <div id="inputs">
-                <div id="grid_input_imc">
-                    <div>
-                        <label for="altura" style="color: #1C8FE7;">Altura (ex.: 1.70)</label>
-                        <input type="number" id="input_altura" step="0.01" placeholder="Digite sua altura" required>
+                <form action="/imc" method="POST">  
+                    <div id="grid_input_imc">
+                        <div>
+                            <label for="altura" style="color: #1C8FE7;">Altura (ex.: 1.70)</label>
+                            <input type="text" name="altura" id="input_altura" placeholder="Digite sua altura" required>
+                        </div>
+                        <div>
+                            <label for="peso" style="color: #1C8FE7;">Peso (ex.:69.2):</label>
+                            <input type="text" name="peso" id="input_peso" placeholder="Digite seu peso" required>
+                        </div>
+                        <button id="botao_azul" type="submit" style="width: 100%; margin-bottom: 15px; margin-top: 19px;">Calcular</button>
+                        <div id="resultado_imc">
+                            <p>Resultado: {% if imc_resultado %} <p>{{ imc_resultado }}</p> {% endif %}</p>
+                        </div>
+                        <button id="botao_voltar"
+                        {% if botao_visivel %} 
+                            style="visibility: visible; width: 90%; margin-bottom: 0px; margin-top: 15px;"
+                        {% else %}
+                            style="visibility: hidden; width: 100%; margin-bottom: 0px; margin-top: 15px;"
+                        {% endif %} 
+                        onclick="window.location.href='/'">Voltar</button>
+                        <button id="botao_vermelho" type="reset" style="margin-bottom: 0px; margin-top: 15px; width: 100%;">Limpar</button>
+                        
                     </div>
-                    <div>
-                        <label for="peso" style="color: #1C8FE7;">Peso (ex.:69.2):</label>
-                        <input type="number" id="input_peso" placeholder="Digite seu peso" required>
-                    </div>
-                    <button id="botao_azul" type="button" style="width: 100%; margin-bottom: 15px; margin-top: 19px;">Calcular</button>
-                    <p id="resultado_imc">Resultado: </p>
-                    <button id="botao_vermelho" style="margin-bottom: 0px; margin-top: 15px; width: 80%;">Limpar</button>
-                    <button id="botao_voltar" style="display: none; width: 100%; margin-bottom: 0px; margin-top: 15px;">Voltar</button>
-                </div>
+                </form>
             </div>
             <div></div>
         </section>
@@ -70,6 +81,5 @@
             Banco de dados - <a href="https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset/data">https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset/data</a>
         </p>
     </footer>
-    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </body>
 </html>

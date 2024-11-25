@@ -136,7 +136,9 @@ select:valid {
 #botao_vermelho:active {
     background-color: #d20707;
 }
-#resultado {
+#resultado{
+    display: flex;
+    gap: 5px;
     grid-column: span 2;
     margin-top: 15px;
     padding: 10px 10px 10px 10px;
@@ -144,7 +146,10 @@ select:valid {
     color: white;
     border-radius: 5px;
 }
+
 #resultado_imc {
+    display: flex;
+    gap: 5px;
     font-size: 14px;
     margin-top: 15px;
     width: 85%;
