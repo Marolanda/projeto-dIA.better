@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='logo.svg') }}" type="image/x-icon">
     <title>dIA.better</title>
 </head>
 <body>
@@ -17,50 +18,65 @@
             <div id="text">
                 <p>É uma doença causada pela produção insuficiente ou má absorção de insulina, hormônio que regula a glicose no sangue e garante energia para o organismo. <br> A insulina é um hormônio que tem a função de quebrar as moléculas de glicose(açúcar) transformando-a em energia para manutenção das células do nosso organismo.</p>
                 <strong>Descubra agora sua previsão!</strong>
+                <div class="warning-container">
+                    <div class="warning-header">
+                      <img src="{{ url_for('static', filename='atencao.svg') }}" alt="Ícone de atenção" class="warning-icon">
+                      <h4>ATENÇÃO!</h4>
+                    </div>
+                    <p id="parte_1">
+                      As informações fornecidas pela ferramenta de previsão de diabetes dIA.better têm como objetivo auxiliar na identificação de possíveis fatores de risco e orientar a busca por acompanhamento médico. 
+                      No entanto, é importante lembrar que os resultados apresentados não são 100% precisos e não substituem uma avaliação profissional.
+                    </p>
+                    <p class="warning-footer">
+                     <strong>Para um diagnóstico completo e um tratamento adequado, consulte sempre um médico especializado.</strong> 
+                    </p>
+                </div>
             </div>
-            <img src="{{ url_for('static', filename='image.svg') }}" alt="" id="image">
+            <div id="imc">
+                <img src="{{ url_for('static', filename='image.svg') }}" alt="" id="image">
+                <a href="{{ url_for('pag_imc') }}"><button id="botao_azul">Não sabe seu IMC? Descubra agora!</button></a>
+                <p>IMC é a sigla para Índice de Massa Corpórea, parâmetro...</p>
+            </div>
             <div id="inputs">
                 <h1>Preencha os espaços abaixo e descubra </h1>
-                <form action="/predict" method="POST" onsubmit="return formatarNumeros()">
+                <form action="/predict" method="POST" id="predictForm">
                     <div id="grid_input">
                         <input id="input_idade" type="number" name="age" placeholder="Sua idade">
-                        <input id="input_imc" type="text" name="bmi" placeholder="Seu IMC">
+                        <input id="input_imc" type="text" name="bmi" value="{{ imc_value | default('') }}" placeholder="Seu IMC" required pattern="^\d+([.,]\d+)$" title="Digite um número válido, como 25,4 ou 25.4">
                         <input id="input_glicose" type="number" name="blood_glucose_level" placeholder="Seu nível de glicose">
-                        <input id="input_hba1c" type="text" name="HbA1c_level" placeholder="Seu hbA1c">
-                        <label for="gender">Gênero:</label>
-                        <select name="gender">
+                        <input id="input_hba1c" type="text" name="HbA1c_level" placeholder="Seu hbA1c" required pattern="^\d+([.,]\d+)$" title="Digite um número válido, como 5,4 ou 5.4">
+                        <select name="gender" required>
+                            <option value="" disabled selected>Gênero</option>
                             <option value="male">Homem</option>
                             <option value="female">Mulher</option>
                         </select>
-                        <label for="hypertension">Possui hipertensão:</label>
-                        <select name="hypertension">
+                        <select name="hypertension" required>
+                            <option value="" disabled selected>Possui Hipertensão</option>
                             <option value="1">Sim</option>
                             <option value="0">Não</option>
                         </select>
-                        <label for="smoking_history">Seu histórico de fumo:</label>
-                        <select name="smoking_history">
+                        <select name="smoking_history" required>
+                            <option value="" disabled selected>Histórico de Fumo</option>
                             <option value="never">Nunca fumei</option>
                             <option value="current">Fumo atualmente</option>
                             <option value="former">Parei de fumar</option>
                             <option value="ever">Sempre fumei</option>
                             <option value="not current">Atualmente não fumo</option>
                         </select>
-                        <label for="heart_disease">Possui problema de coração:</label>
-                        <select name="heart_disease">
+                        <select name="heart_disease" required>
+                            <option value="" disabled selected>Possui Problema de Coração</option>
                             <option value="1">Sim</option>
                             <option value="0">Não</option>
                         </select>
-                       
-                    
+                        <input type="hidden" name="scroll_position" id="predict_scroll_position">
                         <button id="botao_azul" type="submit" >Calcular</button>
                         <button id="botao_vermelho" type="reset" >Limpar</button>
-                        <p id="resultado">Resultado: <strong id="resultado-prediction"></strong></p>
+                        <div id="resultado">
+                            <p id="resultadoL">Resultado: {% if request.args.get('prediction') %} <p id="resultadoR">{{ request.args.get('prediction') }}</p> {% endif %}</p>
+                        </div>
                     </div>
                 </form>
-            </div>
-            <div id="imc">
-                <a href="{{ url_for('outra_pagina') }}"><button id="botao_azul">Não sabe seu IMC? Descubra agora!</button></a>
-                <p>IMC é a sigla para Índice de Massa Corpórea, parâmetro...</p>
+                
             </div>
         </section>
         <section id="body2">
@@ -82,9 +98,35 @@
             </div>
             <div></div>
         </section>
-        <div id="flex">
-            <img id="grafico" src="{{ url_for('static', filename='grafico-1.svg') }}" alt="">
-            <img id="grafico" src="{{ url_for('static', filename='grafico-2.svg') }}" alt="">
+        <div id="grid" style="justify-content: flex-start;">
+            <img src="{{ url_for('static', filename='grafico 3.svg') }}" alt="grafico">
+            <img src="{{ url_for('static', filename='grafico 4.svg') }}" alt="grafico">
+            <form action="/toggle_graphs" method="post" id="toggleGraphsForm">
+                <input type="hidden" name="scroll_position" id="scroll_position">
+                <button id="botaoGraficos" style="width: 100%; color: white;">Mostrar mais gráficos</button>
+            </form>
+            
+            <div></div>
+        </div>
+        <div id="graficos" style="display: {{ 'grid' if show_graphs else 'none' }};">
+            <div id="divGrafico">
+                <img src="{{ url_for('static', filename='grafico 2.svg') }}" alt="grafico">
+            </div>
+            <div id="divGrafico">
+                <p>O gráfico revela que, apesar de os homens representarem uma quantidade menor no total de pacientes analisados, o número de casos de diabetes entre eles é proporcionalmente semelhante ao das mulheres. Isso sugere que a prevalência de diabetes pode ser maior entre os homens, mesmo com uma população geral menor. Essa diferença proporcional destaca a necessidade de uma investigação mais detalhada sobre os fatores de risco específicos para o desenvolvimento de diabetes entre homens, como hábitos alimentares, nível de atividade física e predisposição genética, comparativamente ao grupo feminino.</p>
+            </div>
+            <div id="divGrafico">
+                <img src="{{ url_for('static', filename='grafico 5.svg') }}" alt="grafico">
+            </div>
+            <div id="divGrafico">
+                <p>O gráfico relaciona o histórico de fumo com a presença ou ausência de diabetes. Pacientes com histórico de fumo anterior ("former") representam a maior parte da amostra, com prevalência de diabetes significativa. Entre os fumantes atuais ("current"), o número de diabéticos é relevante, mas menor. Já os que nunca fumaram ("never") têm menor proporção em ambas as categorias. Pacientes com fumo esporádico ("ever") apresentam aumento na prevalência de diabetes, enquanto os que não fumam atualmente ("not current") apresentam distribuição equilibrada. O hábito de fumar, especialmente em períodos anteriores, pode estar relacionado ao aumento do risco de diabetes.</p>
+            </div>
+            <div id="divGrafico">
+                <img src="{{ url_for('static', filename='grafico 1.svg') }}" alt="grafico">
+            </div>
+            <div id="divGrafico">
+                <p>O aumento dos níveis de hemoglobina glicada (HbA1c) acompanha o avanço da idade, refletindo mudanças metabólicas ao longo da vida. A HbA1c, marcador da média de glicose no sangue nos últimos meses, é influenciada por fatores como a redução da sensibilidade à insulina, mudanças na composição corporal (maior gordura visceral e menor massa muscular) e inflamações crônicas. Indivíduos mais velhos frequentemente apresentam níveis elevados de HbA1c, mesmo sem diabetes, devido à menor eficiência do pâncreas e diminuição do clearance da glicose. Assim, é fundamental considerar a idade ao interpretar os exames e adotar medidas preventivas, como dieta saudável e atividade física.</p>
+            </div>
         </div>
     </div>
     <footer>
@@ -96,32 +138,21 @@
         </p>
     </footer>
     <script>
-        const resultadoPrediction = "{{ prediction }}";
-        if (resultadoPrediction) {
-            document.getElementById("resultado-prediction").textContent = resultadoPrediction;
-        }
-        // Verifica se há um valor de IMC salvo e insere no campo de IMC
-        const imcValue = sessionStorage.getItem("imcValue");
-        if (imcValue) {
-            let imcValueFormatado = imcValue.replace(",", ".");
-            document.getElementById("input_imc").value = imcValueFormatado;
-            sessionStorage.removeItem("imcValue"); // Remove o IMC após preenchê-lo
-        }
-
-        function formatarNumeros() {
-            const imcInput = document.getElementById("input_imc");
-            const hba1cInput = document.getElementById("input_hba1c");
-
-            imcInput.value = imcInput.value.replace(",", ".");
-            hba1cInput.value = hba1cInput.value.replace(",", ".");
-
-            if (isNaN(parseFloat(imcInput.value)) || isNaN(parseFloat(hba1cInput.value))) {
-                alert("Por favor, insira valores válidos para IMC e/ou HbA1c.");
-                return false; 
-            }
-
-            return true; 
-        }
+        // Adiciona um evento de submit ao formulário de gráficos
+        document.getElementById('toggleGraphsForm').addEventListener('submit', function () {
+            document.getElementById('scroll_position').value = window.scrollY; // Define a posição do scroll no campo hidden
+        });
+    
+        // Adiciona um evento de submit ao formulário de predição
+        document.getElementById('predictForm').addEventListener('submit', function () {
+            document.getElementById('predict_scroll_position').value = window.scrollY; // Define a posição do scroll no campo hidden
+        });
+    
+        // Restaura a posição do scroll após o recarregamento da página
+        window.onload = function () {
+            const scrollPosition = parseInt(new URLSearchParams(window.location.search).get('scroll_position')) || 0;
+            window.scrollTo(0, scrollPosition);
+        };
     </script>
 </body>
 </html>
