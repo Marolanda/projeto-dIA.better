@@ -70,14 +70,14 @@ def test_valida_input_vazio():
 #IMC
 def testImc_valida():
 
-    assert validaImc("4.5") == "decimal válido" #Valido com ponto
-    assert validaImc("6,8") == "decimal válido" # Válido (vírgula)
+    assert validaImc("44.5") == "decimal válido" #Valido com ponto
+    assert validaImc("36,8") == "decimal válido" # Válido (vírgula)
     
 
 def testImc_invalido():
-    assert validaImc("2.5") == "fora do intervalo" # Fora do intervalo (menor que 3)
-    assert validaImc("10,1") == "fora do intervalo" # Fora do intervalo (maior que 9)
-    assert validaImc("-4.0") == "inválido" # Número negativo (menor que 3)
+    assert validaImc("2.5") == "fora do intervalo" # Fora do intervalo (menor que 10)
+    assert validaImc("100,1") == "fora do intervalo" # Fora do intervalo (maior que 100)
+    assert validaImc("-4.0") == "inválido" # Número negativo (menor que 10)
 
     assert validaImc("0") == "inválido" # Número negativo
     assert validaImc("Dez") == "inválido" # Teste para letras 

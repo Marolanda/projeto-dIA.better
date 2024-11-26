@@ -22,17 +22,13 @@ def validarGlicose(glicose):
 
 #Validar Hemoglobina
 def valida_input(valor):
-    # Remove espaços extras no início e no fim
     valor = valor.strip()
     
-    # Expressão regular para verificar números com ponto ou vírgula
     padrao = r"^\d+([.,]\d+)$"
     
     if re.match(padrao, valor):
-        # Substituir vírgula por ponto e converter para float
         valor_float = float(valor.replace(",", "."))
         
-        # Validar intervalo
         if 3 < valor_float < 9:
             return "decimal válido"
         else:
@@ -41,20 +37,15 @@ def valida_input(valor):
         return "inválido"
 
 #Validar IMC
-
 def validaImc(imc):
-    # Remove espaços extras no início e no fim
     imc = imc.strip()
     
-    # Expressão regular para verificar números com ponto ou vírgula
     padrao = r"^\d+([.,]\d+)$"
     
     if re.match(padrao, imc):
-        # Substituir vírgula por ponto e converter para float
         imc_float = float(imc.replace(",", "."))
         
-        # Validar intervalo
-        if 3 < imc_float < 9:
+        if 10 < imc_float < 100:
             return "decimal válido"
         else:
             return "fora do intervalo"
