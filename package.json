@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "util": "^0.12.5"
+  },
+  "dependencies": {
+    "selenium-webdriver": "^4.26.0"
+  },
+  "jest": {
+    "testEnvironment": "jest-environment-jsdom"
+  }
+}

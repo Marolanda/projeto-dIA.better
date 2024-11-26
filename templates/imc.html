@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='logo.svg') }}" type="image/x-icon">
+    <title>Calcule seu IMC</title>
+</head>
+<body>
+    <div id="width">
+        <a href="/"><img id="logo" src="{{ url_for('static', filename='logo.svg') }}" alt="logo"></a>
+        <header>
+            <img id="banner_img" src="{{ url_for('static', filename='banner.svg') }}" alt="">
+        </header>
+        <h1 id="titulo">Cálculo IMC</h1>
+        <section id="body">
+            <div id="text">
+                <p>IMC é a sigla para Índice de Massa Corpórea, parâmetro adotado pela Organização Mundial de Saúde para calcular o peso ideal de cada pessoa.<br><br>O índice é calculado da seguinte maneira: divide-se o peso do paciente pela sua altura elevado ao quadrado. Diz-se que o indivíduo tem peso normal quando o resultado do IMC está entre 18,5 e 24,9.</p>
+                <strong>Descubra agora seu IMC!</strong>
+                <p>Insira seu peso e a altura nos campos abaixo e compare com os índices da tabela.<span style="color: #A4A148;"> Importante: siga os exemplos e use pontos como separadores.</span></p>
+            </div>
+            <div id="tabela">
+                <h2 id="titulo_grid_tabela">Como interpretar IMC</h2>
+                <div id="tabela_imc">
+                    <p style="color: #1C8FE7;">IMC</p>
+                    <p style="color: #1C8FE7;">Classificação</p>
+                    <p style="color: #1C8FE7;">Grau de Obesidade</p>
+                    <p>Menor que 18,5</p>
+                    <p>Magreza</p>
+                    <p>0</p>
+                    <p>Entre 18,5 e 24,9</p>
+                    <p>Normal</p>
+                    <p>0</p>
+                    <p>Entre 25,0 e 29,9</p>
+                    <p>Sobrepeso</p>
+                    <p>I</p>
+                    <p>Entre 30,0 e 39,9</p>
+                    <p>Obesidade</p>
+                    <p>II</p>
+                    <p>Maior que 40,0</p>
+                    <p>Obesidade Grave</p>
+                    <p>III</p>
+                </div>
+            </div>
+            <div id="inputs">
+                <form action="/imc" method="POST">  
+                    <div id="grid_input_imc">
+                        <div>
+                            <label for="altura" style="color: #1C8FE7;">Altura (ex.: 1.70)</label>
+                            <input type="text" name="altura" id="input_altura" placeholder="Digite sua altura" required>
+                        </div>
+                        <div>
+                            <label for="peso" style="color: #1C8FE7;">Peso (ex.:69.2):</label>
+                            <input type="text" name="peso" id="input_peso" placeholder="Digite seu peso" required>
+                        </div>
+                        <button id="botao_azul" type="submit" style="width: 100%; margin-bottom: 15px; margin-top: 19px;">Calcular</button>
+                        <div id="resultado_imc">
+                            <p>Resultado: {% if imc_resultado %} <p>{{ imc_resultado }}</p> {% endif %}</p>
+                        </div>
+                        <button id="botao_voltar"
+                        {% if botao_visivel %} 
+                            style="visibility: visible; width: 90%; margin-bottom: 0px; margin-top: 15px;"
+                        {% else %}
+                            style="visibility: hidden; width: 100%; margin-bottom: 0px; margin-top: 15px;"
+                        {% endif %} 
+                        onclick="window.location.href='/'">Voltar</button>
+                        <button id="botao_vermelho" type="reset" style="margin-bottom: 0px; margin-top: 15px; width: 100%;">Limpar</button>
+                        
+                    </div>
+                </form>
+            </div>
+            <div></div>
+        </section>
+    </div>
+    <footer>
+        <p>
+            @Copyright 
+        </p>
+        <p>
+            Banco de dados - <a href="https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset/data">https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset/data</a>
+        </p>
+    </footer>
+</body>
+</html>

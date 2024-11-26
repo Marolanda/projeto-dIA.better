@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='logo.svg') }}" type="image/x-icon">
+    <title>dIA.better</title>
+</head>
+<body>
+    <div id="width">
+        <img id="logo" src="{{ url_for('static', filename='logo.svg') }}" alt="logo">
+        <header>
+            <img id="banner_img" src="{{ url_for('static', filename='banner.svg') }}" alt="">
+        </header>
+        <h1 id="titulo">Previsão de Diabetes</h1>
+        <section id="body">
+            <div id="text">
+                <p>É uma doença causada pela produção insuficiente ou má absorção de insulina, hormônio que regula a glicose no sangue e garante energia para o organismo. <br> A insulina é um hormônio que tem a função de quebrar as moléculas de glicose(açúcar) transformando-a em energia para manutenção das células do nosso organismo.</p>
+                <strong>Descubra agora sua previsão!</strong>
+                <div class="warning-container">
+                    <div class="warning-header">
+                    <img src="{{ url_for('static', filename='atencao.svg') }}" alt="Ícone de atenção" class="warning-icon">
+                    <h4>ATENÇÃO!</h4>
+                    </div>
+                    <p id="parte_1">
+                    As informações fornecidas pela ferramenta de previsão de diabetes dIA.better têm como objetivo auxiliar na identificação de possíveis fatores de risco e orientar a busca por acompanhamento médico. 
+                    No entanto, é importante lembrar que os resultados apresentados não são 100% precisos e não substituem uma avaliação profissional.
+                    </p>
+                    <p class="warning-footer">
+                    <strong>Para um diagnóstico completo e um tratamento adequado, consulte sempre um médico especializado.</strong> 
+                    </p>
+                </div>
+            </div>
+            <div id="imc">
+                <img src="{{ url_for('static', filename='image.svg') }}" alt="" id="image">
+                <a href="{{ url_for('pag_imc') }}"><button id="botao_azul">Não sabe seu IMC? Descubra agora!</button></a>
+                <p>IMC é a sigla para Índice de Massa Corpórea, parâmetro...</p>
+            </div>
+            <div id="inputs">
+                <h1>Preencha os espaços abaixo e descubra </h1>
+                <form action="/predict" method="POST" id="predictForm">
+                    <div id="grid_input">
+                        <input id="input_idade" type="number" name="age" placeholder="Sua idade">
+                        <input id="input_imc" type="text" name="bmi" value="{{ imc_value | default('') }}" placeholder="Seu IMC" required pattern="^\d+([.,]\d+)$" title="Digite um número válido, como 25,4 ou 25.4">
+                        <input id="input_glicose" type="number" name="blood_glucose_level" placeholder="Seu nível de glicose">
+                        <input id="input_hba1c" type="text" name="HbA1c_level" placeholder="Seu hbA1c" required pattern="^\d+([.,]\d+)$" title="Digite um número válido, como 5,4 ou 5.4">
+                        <select name="gender" required>
+                            <option value="" disabled selected>Gênero</option>
+                            <option value="male">Homem</option>
+                            <option value="female">Mulher</option>
+                        </select>
+                        <select name="hypertension" required>
+                            <option value="" disabled selected>Possui Hipertensão</option>
+                            <option value="1">Sim</option>
+                            <option value="0">Não</option>
+                        </select>
+                        <select name="smoking_history" required>
+                            <option value="" disabled selected>Histórico de Fumo</option>
+                            <option value="never">Nunca fumei</option>
+                            <option value="current">Fumo atualmente</option>
+                            <option value="former">Parei de fumar</option>
+                            <option value="ever">Sempre fumei</option>
+                            <option value="not current">Atualmente não fumo</option>
+                        </select>
+                        <select name="heart_disease" required>
+                            <option value="" disabled selected>Possui Problema de Coração</option>
+                            <option value="1">Sim</option>
+                            <option value="0">Não</option>
+                        </select>
+                        <input type="hidden" name="scroll_position" id="predict_scroll_position">
+                        <button id="botao_azul" type="submit" >Calcular</button>
+                        <button id="botao_vermelho" type="reset" >Limpar</button>
+                        <div id="resultado">
+                            <p id="resultadoL">Resultado: {% if request.args.get('prediction') %} <p id="resultadoR">{{ request.args.get('prediction') }}</p> {% endif %}</p>
+                        </div>
+                    </div>
+                </form>
+                
+            </div>
+        </section>
+        <section id="body2">
+            <h1 id="titulo">Banco de dados - Previsão de diabetes</h1>
+            <div></div>
+            <div style="background-color: #D9D9D9; padding: 10px 20px;">
+                <p>O banco de dados utilizado neste website foi projetado para auxiliar na previsão do diabetes com base em indicadores-chave de saúde, como idade, sexo, índice de massa corporal (IMC), hipertensão, doença cardíaca, histórico de tabagismo, nível de HbA1c e nível de glicose no sangue.<br><br>
+                    Ele contém registros de dados do paciente e vários atributos que influenciam a probabilidade de desenvolver diabetes. Este Dataset será utilizado para construir modelos de aprendizado de máquina que podem prever a probabilidade de diabetes em pacientes com base em seu histórico médico e detalhes demográficos.<br><br>
+                    A previsão deste website é feita através de uma IA e foi utilizado um banco de dados fornecidos pela Kaggle, cujo tamanho possui 1000 linhas e 9 colunas.<br><br>
+                    O arquivo diabetes_prediction_dataset.csv contém dados médicos e demográficos de pacientes, juntamente com seu status de diabetes, seja positivo ou negativo.<br><br>
+                </p>
+            </div>
+            <div></div>
+        </section>
+        <section id="body2">
+            <div>
+                <h2>Sobre a Diabetes</h2>
+                <p>O diabetes tipo 1 ocorre em 5 a 10% dos casos, quando o sistema imunológico ataca as células produtoras de insulina, resultando em pouca ou nenhuma produção, o que aumenta os níveis de glicose no sangue. Já o diabetes tipo 2 é geralmente assintomático e se manifesta na vida adulta, especialmente após os 40 anos, com evolução lenta e risco de complicações. <br><br> <strong> >> Está associado a excesso de peso, sedentarismo, má alimentação e histórico familiar de diabetes.</strong> <br><br> A seguir, é possível observar dois gráficos. ambos mostram um aumento significativo à medida que os pacientes envelhecem. <br><br>Esse crescimento indica que a probabilidade de desenvolver diabetes e hipertensão se intensifica com o avanço da idade. A resistência à insulina e as mudanças metabólicas são fatores que contribuem para o aumento da diabetes, enquanto o endurecimento dos vasos sanguíneos e alterações na função cardíaca estão relacionados à hipertensão. <br><br>Além disso, é importante destacar que essas duas condições frequentemente coexistem, aumentando o risco de complicações cardiovasculares. Isso ressalta a necessidade de monitoramento constante e intervenções preventivas em populações mais velhas, como a adoção de estilos de vida saudáveis. </p>
+            </div>
+            <div></div>
+        </section>
+        <div id="grid" style="justify-content: flex-start;">
+            <img src="{{ url_for('static', filename='grafico 3.svg') }}" alt="grafico">
+            <img src="{{ url_for('static', filename='grafico 4.svg') }}" alt="grafico">
+            <form action="/toggle_graphs" method="post" id="toggleGraphsForm">
+                <input type="hidden" name="scroll_position" id="scroll_position">
+                <button id="botaoGraficos" style="width: 100%; color: white;">Mostrar mais gráficos</button>
+            </form>
+            
+            <div></div>
+        </div>
+        <div id="graficos" style="display: {{ 'grid' if show_graphs else 'none' }};">
+            <div id="divGrafico">
+                <img src="{{ url_for('static', filename='grafico 2.svg') }}" alt="grafico">
+            </div>
+            <div id="divGrafico">
+                <p>O gráfico revela que, apesar de os homens representarem uma quantidade menor no total de pacientes analisados, o número de casos de diabetes entre eles é proporcionalmente semelhante ao das mulheres. Isso sugere que a prevalência de diabetes pode ser maior entre os homens, mesmo com uma população geral menor. Essa diferença proporcional destaca a necessidade de uma investigação mais detalhada sobre os fatores de risco específicos para o desenvolvimento de diabetes entre homens, como hábitos alimentares, nível de atividade física e predisposição genética, comparativamente ao grupo feminino.</p>
+            </div>
+            <div id="divGrafico">
+                <img src="{{ url_for('static', filename='grafico 5.svg') }}" alt="grafico">
+            </div>
+            <div id="divGrafico">
+                <p>O gráfico relaciona o histórico de fumo com a presença ou ausência de diabetes. Pacientes com histórico de fumo anterior ("former") representam a maior parte da amostra, com prevalência de diabetes significativa. Entre os fumantes atuais ("current"), o número de diabéticos é relevante, mas menor. Já os que nunca fumaram ("never") têm menor proporção em ambas as categorias. Pacientes com fumo esporádico ("ever") apresentam aumento na prevalência de diabetes, enquanto os que não fumam atualmente ("not current") apresentam distribuição equilibrada. O hábito de fumar, especialmente em períodos anteriores, pode estar relacionado ao aumento do risco de diabetes.</p>
+            </div>
+            <div id="divGrafico">
+                <img src="{{ url_for('static', filename='grafico 1.svg') }}" alt="grafico">
+            </div>
+            <div id="divGrafico">
+                <p>O aumento dos níveis de hemoglobina glicada (HbA1c) acompanha o avanço da idade, refletindo mudanças metabólicas ao longo da vida. A HbA1c, marcador da média de glicose no sangue nos últimos meses, é influenciada por fatores como a redução da sensibilidade à insulina, mudanças na composição corporal (maior gordura visceral e menor massa muscular) e inflamações crônicas. Indivíduos mais velhos frequentemente apresentam níveis elevados de HbA1c, mesmo sem diabetes, devido à menor eficiência do pâncreas e diminuição do clearance da glicose. Assim, é fundamental considerar a idade ao interpretar os exames e adotar medidas preventivas, como dieta saudável e atividade física.</p>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>
+            @Copyright 
+        </p>
+        <p>
+            Banco de dados - <a href="https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset/data">https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset/data</a>
+        </p>
+    </footer>
+    <script>
+        // Adiciona um evento de submit ao formulário de gráficos
+        document.getElementById('toggleGraphsForm').addEventListener('submit', function () {
+            document.getElementById('scroll_position').value = window.scrollY; // Define a posição do scroll no campo hidden
+        });
+    
+        // Adiciona um evento de submit ao formulário de predição
+        document.getElementById('predictForm').addEventListener('submit', function () {
+            document.getElementById('predict_scroll_position').value = window.scrollY; // Define a posição do scroll no campo hidden
+        });
+    
+        // Restaura a posição do scroll após o recarregamento da página
+        window.onload = function () {
+            const scrollPosition = parseInt(new URLSearchParams(window.location.search).get('scroll_position')) || 0;
+            window.scrollTo(0, scrollPosition);
+        };
+    </script>
+</body>
+</html>
