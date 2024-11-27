@@ -48,7 +48,7 @@ def formatar_numeros(form_data):
 @app.route('/')
 def home():
     global show_graphs
-    imc_value = session.get('imc_value', "Seu IMC")
+    imc_value = session.get('imc_value', "")
     return render_template('index.html', prediction="", imc_value=imc_value, show_graphs=show_graphs)
 
 @app.route('/toggle_graphs', methods=['POST'])
