@@ -5,10 +5,19 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
+
+# Configurar opções do Chrome para ambiente headless
+chrome_options = Options()
+chrome_options.add_argument("--headless")  # Executar sem interface gráfica
+chrome_options.add_argument("--no-sandbox")  # Necessário para ambientes CI/CD
+chrome_options.add_argument("--disable-dev-shm-usage")  # Evita erros de memória compartilhada
+chrome_options.add_argument("--disable-gpu")  # Reduz consumo em ambientes Linux
+chrome_options.add_argument("--window-size=1920,1080")  # Simula um tamanho de tela padrão
 
 # Inicializar o WebDriver
 service = Service(ChromeDriverManager().install())
-driver = webdriver.Chrome(service=service)
+driver = webdriver.Chrome(service=service, options=chrome_options)
 
 try:
     # Acessar o site
