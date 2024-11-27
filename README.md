@@ -69,3 +69,10 @@ HTML, CSS e Bootstrap - Interface do usuário.
 
 ## Licença
 Este projeto está sob a licença MIT. Para mais informações, consulte o arquivo LICENSE.
+
+/> Autores
+- Abraão Vinicio
+- Carlos Barbosa
+- Júlio César
+- Mariana Holanda 
+- Matheus Guaraná
